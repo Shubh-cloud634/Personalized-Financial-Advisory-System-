@@ -23,23 +23,8 @@ This system aims to make financial planning simple, accessible, and data-driven.
 
 * **Programming Language:** Python
 * **Libraries:** Pandas, NumPy, Scikit-learn, Matplotlib
-* **Frontend (Optional):** Streamlit / React
+* **Frontend (Optional):**  React
 * **Database (Optional):** MySQL / MongoDB
-
----
-
-## 📂 Project Structure
-
-```
-Personalized-Financial-Advisory-System/
-│── data/               # Dataset files
-│── notebooks/          # Jupyter notebooks
-│── src/                # Source code
-│── models/             # Trained ML models
-│── app.py              # Main application file
-│── requirements.txt    # Dependencies
-│── README.md           # Documentation
-```
 
 ---
 
@@ -158,15 +143,9 @@ Steps:
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
 ## 👨‍💻 Author
 
-* Your Name
+* Shubh Sahu
 
 ---
 
