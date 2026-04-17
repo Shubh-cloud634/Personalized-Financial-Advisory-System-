@@ -67,8 +67,8 @@ export const ScenarioAnalysis = () => {
         <div className="grid gap-8 md:gap-10 md:grid-cols-3">
           <div>
             <div className="metric-label mb-3">New Monthly Savings</div>
-            <div className="metric-number text-green-600">${newSavings.toLocaleString()}</div>
-            <div className="mt-2 body-text text-muted-foreground">Was ${d.monthlySavings.toLocaleString()}</div>
+            <div className="metric-number text-green-600">₹{newSavings.toLocaleString()}</div>
+            <div className="mt-2 body-text text-muted-foreground">Was ₹{d.monthlySavings.toLocaleString()}</div>
           </div>
           <div>
             <div className="metric-label mb-3">Time to Goal</div>

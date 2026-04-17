@@ -57,16 +57,18 @@ export const SpendingPie = () => {
       <div className="flex flex-col md:flex-row items-center gap-8 md:gap-10">
         <div className="h-[240px] md:h-[260px] w-[240px] md:w-[260px] flex-shrink-0">
           <ResponsiveContainer>
-            <PieChart>
-              <Pie data={spendingBreakdown} dataKey="value" innerRadius={60} outerRadius={100} paddingAngle={3} stroke="hsl(var(--background))" strokeWidth={3}>
-                {spendingBreakdown.map((c, i) => <Cell key={i} fill={c.color} />)}
-              </Pie>
+            <BarChart layout="vertical" data={spendingBreakdown}>
+              <XAxis type="number" hide />
+              <YAxis dataKey="name" type="category" width={100} axisLine={false} tickLine={false} tick={{fill: "hsl(var(--muted-foreground))"}} />
               <Tooltip 
                 contentStyle={{ ...tooltipStyle, background: "#374151", color: "#ffffff", border: "1px solid #4b5563" }} 
                 itemStyle={{ color: "#ffffff" }}
-                formatter={(v: number) => `$${v}`} 
+                formatter={(v: number) => `₹${v}`} 
               />
-            </PieChart>
+              <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                {spendingBreakdown.map((c, i) => <Cell key={i} fill={c.color} />)}
+              </Bar>
+            </BarChart>
           </ResponsiveContainer>
         </div>
         <ul className="flex-1 space-y-4 md:space-y-5 w-full md:w-auto">
@@ -76,7 +78,7 @@ export const SpendingPie = () => {
                 <span className="h-3 w-3 rounded-full flex-shrink-0" style={{ background: c.color }} />
                 <span className="body-text text-muted-foreground">{c.name}</span>
               </span>
-              <span className="font-mono font-semibold text-base md:text-lg whitespace-nowrap">${c.value}</span>
+              <span className="font-mono font-semibold text-base md:text-lg whitespace-nowrap">₹{c.value}</span>
             </li>
           ))}
         </ul>
@@ -100,8 +102,8 @@ export const ForecastChart = () => {
           <LineChart data={forecast}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
             <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={14} tickLine={false} axisLine={false} />
-            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={14} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v / 1000}k`} />
-            <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `$${v.toLocaleString()}`} />
+            <YAxis stroke="hsl(var(--muted-foreground))" fontSize={14} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v / 1000}k`} />
+            <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `₹${v.toLocaleString()}`} />
             <Legend wrapperStyle={{ fontSize: 14, paddingTop: "24px" }} />
             <Line type="monotone" dataKey="expenses" stroke="hsl(var(--accent))" strokeWidth={3} dot={{ r: 5, fill: "hsl(var(--accent))" }} />
             <Line type="monotone" dataKey="income" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ r: 5, fill: "hsl(var(--primary))" }} />

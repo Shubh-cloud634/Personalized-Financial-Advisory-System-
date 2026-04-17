@@ -5,10 +5,11 @@ import { Sidebar, TopBar, type Tab } from "@/components/Layout";
 import { StatCard } from "@/components/StatCard";
 import { HealthGauge } from "@/components/HealthGauge";
 import { IncomeExpenseChart, SpendingPie, ForecastChart } from "@/components/Charts";
-import { AIInsights, Recommendations, GoalsCard } from "@/components/InsightCards";
+import { GoalsCard } from "@/components/InsightCards";
 import { ScenarioAnalysis } from "@/components/ScenarioAnalysis";
 import { Onboarding } from "@/components/Onboarding";
 import { LandingPage } from "@/components/LandingPage";
+import { Chatbot } from "@/components/Chatbot";
 import { useUserProfile, deriveFinance, UserProfileProvider } from "@/context/UserProfile";
 
 const Dashboard = () => {
@@ -18,12 +19,12 @@ const Dashboard = () => {
   return (
     <>
       <div className="responsive-grid">
-        <div className="lg:col-span-1"><HealthGauge score={d.healthScore} /></div>
+        <div className="lg:col-span-1 h-full"><HealthGauge score={d.healthScore} /></div>
         <div className="grid gap-7 md:gap-7 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:col-span-1">
-          <StatCard label="Monthly Income" value={`$${profile.income.toLocaleString()}`} delta={3.6} spark={[6,7,6,8,7,8,9]} />
-          <StatCard label="Monthly Spending" value={`$${profile.expenses.toLocaleString()}`} delta={-2.1} spark={[8,7,8,6,7,6,5]} />
-          <StatCard label="Monthly Savings" value={`$${d.monthlySavings.toLocaleString()}`} delta={+(d.savingsRate * 100).toFixed(1)} spark={[3,4,5,6,7,8,9]} />
-          <StatCard label="Total Savings" value={`$${profile.savings.toLocaleString()}`} delta={+(d.goalProgress * 100).toFixed(1)} spark={[5,6,5,7,6,8,9]} />
+          <StatCard label="Monthly Income" value={`₹${profile.income.toLocaleString()}`} delta={3.6} spark={[6,7,6,8,7,8,9]} />
+          <StatCard label="Monthly Spending" value={`₹${profile.expenses.toLocaleString()}`} delta={-2.1} spark={[8,7,8,6,7,6,5]} />
+          <StatCard label="Monthly Savings" value={`₹${d.monthlySavings.toLocaleString()}`} delta={+(d.savingsRate * 100).toFixed(1)} spark={[3,4,5,6,7,8,9]} />
+          <StatCard label="Total Savings" value={`₹${profile.savings.toLocaleString()}`} delta={+(d.goalProgress * 100).toFixed(1)} spark={[5,6,5,7,6,8,9]} />
         </div>
       </div>
       <div className="mt-8 responsive-grid">
@@ -45,12 +46,7 @@ const Spending = () => (
   </div>
 );
 
-const Advisor = () => (
-  <div className="grid gap-7 md:gap-7 sm:gap-6 grid-cols-1">
-    <Recommendations />
-    <AIInsights />
-  </div>
-);
+
 
 const Forecast = () => (
   <div className="grid gap-7 md:gap-7 sm:gap-6 grid-cols-1">
@@ -77,12 +73,12 @@ const GoalsPage = () => {
       <div className="grid gap-7 md:gap-7 sm:gap-6 grid-cols-1 md:grid-cols-3">
         <div className="glass-card p-8 md:p-8 sm:p-6 min-h-[160px] flex flex-col justify-between">
           <div className="metric-label">Target</div>
-          <div className="metric-number mt-4">${profile.goal.targetAmount.toLocaleString()}</div>
+          <div className="metric-number mt-4">₹{profile.goal.targetAmount.toLocaleString()}</div>
           <div className="body-text text-muted-foreground mt-3">in {profile.goal.targetMonths} months</div>
         </div>
         <div className="glass-card p-8 md:p-8 sm:p-6 min-h-[160px] flex flex-col justify-between">
           <div className="metric-label">Saved</div>
-          <div className="metric-number mt-4">${profile.savings.toLocaleString()}</div>
+          <div className="metric-number mt-4">₹{profile.savings.toLocaleString()}</div>
           <div className="body-text text-muted-foreground mt-3">{(d.goalProgress * 100).toFixed(1)}% complete</div>
         </div>
         <div className="glass-card p-8 md:p-8 sm:p-6 min-h-[160px] flex flex-col justify-between">
@@ -108,9 +104,9 @@ const SettingsPage = () => {
         <Info label="Name" value={profile.name} />
         <Info label="Goal" value={profile.goal.name} />
         <Info label="Risk" value={profile.risk} />
-        <Info label="Income / mo" value={`$${profile.income.toLocaleString()}`} />
-        <Info label="Expenses / mo" value={`$${profile.expenses.toLocaleString()}`} />
-        <Info label="Savings" value={`$${profile.savings.toLocaleString()}`} />
+        <Info label="Income / mo" value={`₹${profile.income.toLocaleString()}`} />
+        <Info label="Expenses / mo" value={`₹${profile.expenses.toLocaleString()}`} />
+        <Info label="Savings" value={`₹${profile.savings.toLocaleString()}`} />
       </div>
       <button
         onClick={reset}
@@ -132,7 +128,6 @@ const Info = ({ label, value }: { label: string; value: string }) => (
 const tabMeta: Record<Tab, { title: string; subtitle: string; render: () => JSX.Element }> = {
   dashboard: { title: "Dashboard", subtitle: "Your personalized financial overview", render: Dashboard },
   spending:  { title: "Spending",  subtitle: "How your monthly expenses break down", render: Spending },
-  advisor:   { title: "AI Advisor", subtitle: "Strategy tailored to your goal", render: Advisor },
   forecast:  { title: "Forecast",  subtitle: "Project the next 6 months & run scenarios", render: Forecast },
   goals:     { title: "Goals",     subtitle: "Stay on track to financial freedom", render: GoalsPage },
   settings:  { title: "Settings",  subtitle: "Personalize your advisor", render: SettingsPage },
@@ -142,6 +137,7 @@ const App = () => {
   const { profile, setAIPredictions } = useUserProfile();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [showLanding, setShowLanding] = useState(true);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -158,14 +154,15 @@ const App = () => {
 
   const meta = tabMeta[tab];
   return (
-    <div className="min-h-screen pl-20">
-      <Sidebar active={tab} onChange={setTab} />
+    <div className={`min-h-screen transition-all duration-300 ${isSidebarExpanded ? "pl-64" : "pl-20"}`}>
+      <Sidebar active={tab} onChange={setTab} isExpanded={isSidebarExpanded} onToggle={() => setIsSidebarExpanded(!isSidebarExpanded)} />
       <main className="mx-auto max-w-[1500px] px-6 py-8 md:px-10">
-        <TopBar title={meta.title} subtitle={meta.subtitle} />
+        <TopBar title={tab === 'dashboard' ? `Hello ${profile.name.split(' ')[0]}` : meta.title} subtitle={meta.subtitle} />
         <motion.div key={tab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
           {meta.render()}
         </motion.div>
       </main>
+      <Chatbot />
     </div>
   );
 };

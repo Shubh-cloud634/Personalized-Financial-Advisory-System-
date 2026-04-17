@@ -6,6 +6,7 @@ import { InvestmentAllocation } from "./InvestmentAllocation";
 export const Onboarding = () => {
   const { setProfile } = useUserProfile();
   const [step, setStep] = useState(0);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const [name, setName] = useState("");
   const [goalName, setGoalName] = useState("");
@@ -23,8 +24,8 @@ export const Onboarding = () => {
 
   const sectorsList = ["Technology", "Healthcare", "Real Estate", "Crypto", "Bonds", "ESG/Green"];
 
-  const next = () => setStep((s) => s + 1);
-  const back = () => setStep((s) => Math.max(0, s - 1));
+  const next = () => { setErrorMsg(""); setStep((s) => s + 1); };
+  const back = () => { setErrorMsg(""); setStep((s) => Math.max(0, s - 1)); };
 
   const submit = () =>
     setProfile({
@@ -43,7 +44,22 @@ export const Onboarding = () => {
     });
 
   const canNext0 = goalName.trim().length > 0 && targetAmount > 0 && targetMonths > 0;
-  const canNext1 = income > 0 && expenses >= 0 && savings >= 0;
+  const canNext1 = income > 0 && expenses > 0 && savings > 0;
+
+  const handleNext0 = () => {
+    if (canNext0) next();
+    else setErrorMsg("Please fill all empty spaces.");
+  };
+
+  const handleNext1 = () => {
+    if (canNext1) next();
+    else setErrorMsg("Please fill all empty spaces.");
+  };
+
+  const handleSubmit = () => {
+    if (canNext1) submit(); // Using canNext1 logic for final check just in case
+    else submit(); // Though step 3 has no text fields typically
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-10 bg-background text-foreground">
@@ -60,7 +76,7 @@ export const Onboarding = () => {
         </div>
 
         <div className="mb-8 flex gap-2">
-          {[0, 1, 2, 3].map((i) => (
+          {[0, 1, 2].map((i) => (
             <div
               key={i}
               className={`h-1 flex-1 rounded-full transition-all ${i <= step ? "bg-primary" : "bg-secondary"}`}
@@ -72,7 +88,7 @@ export const Onboarding = () => {
         {step === 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column: Goal Setup Form */}
-            <div className="bg-card border border-border rounded-xl shadow-soft p-8 md:p-10 space-y-8">
+            <div className="h-[650px] bg-card border border-border rounded-xl shadow-soft p-8 md:p-10 flex flex-col space-y-8 overflow-y-auto">
               <div className="flex items-center gap-3 text-base font-semibold text-primary">
                 <Target className="h-5 w-5" /> Step 1 — Your Goal
               </div>
@@ -88,7 +104,7 @@ export const Onboarding = () => {
                 />
               </Field>
               <div className="grid gap-5 md:grid-cols-2">
-                <Field label="Target Amount ($)">
+                <Field label="Target Amount (₹)">
                   <input
                     type="number"
                     min={0}
@@ -109,11 +125,14 @@ export const Onboarding = () => {
                   />
                 </Field>
               </div>
-              <Nav onNext={next} canNext={canNext0} />
+              <div className="mt-auto">
+                {errorMsg && <div className="text-red-500 font-semibold mb-4 bg-red-500/10 p-3 rounded-lg border border-red-500/20">{errorMsg}</div>}
+                <Nav onNext={handleNext0} canNext={true} />
+              </div>
             </div>
 
             {/* Right Column: Investment Allocation */}
-            <div className="overflow-y-auto max-h-[600px] pr-4">
+            <div className="h-[650px] bg-card border border-border rounded-xl shadow-soft p-4 md:p-6 overflow-y-auto">
               <InvestmentAllocation risk={risk} goalAmount={targetAmount} timeframe={targetMonths} />
             </div>
           </div>
@@ -125,15 +144,15 @@ export const Onboarding = () => {
             <div className="flex items-center gap-3 text-base font-semibold text-primary">
               <Wallet className="h-5 w-5" /> Step 2 — Your Finances
             </div>
-            <div className="grid gap-5 md:grid-cols-3">
-              <Field label="Monthly Income ($)">
-                <input type="number" min={0} value={income || ""} onChange={(e) => setIncome(+e.target.value)} placeholder="8500" className={inputCls} />
+            <div className="grid gap-5 grid-cols-3">
+              <Field label="Monthly Income">
+                <input type="number" min={0} value={income || ""} onChange={(e) => setIncome(+e.target.value)} placeholder="₹8500" className={inputCls} />
               </Field>
-              <Field label="Monthly Expenses ($)">
-                <input type="number" min={0} value={expenses || ""} onChange={(e) => setExpenses(+e.target.value)} placeholder="5200" className={inputCls} />
+              <Field label="Monthly Expenses">
+                <input type="number" min={0} value={expenses || ""} onChange={(e) => setExpenses(+e.target.value)} placeholder="₹5200" className={inputCls} />
               </Field>
-              <Field label="Current Savings ($)">
-                <input type="number" min={0} value={savings || ""} onChange={(e) => setSavings(+e.target.value)} placeholder="15000" className={inputCls} />
+              <Field label="Current Savings">
+                <input type="number" min={0} value={savings || ""} onChange={(e) => setSavings(+e.target.value)} placeholder="₹15000" className={inputCls} />
               </Field>
             </div>
             
@@ -149,7 +168,8 @@ export const Onboarding = () => {
                 </select>
               </Field>
             </div>
-            <Nav onBack={back} onNext={next} canNext={canNext1} />
+            {errorMsg && <div className="text-red-500 font-semibold mb-4 bg-red-500/10 p-3 rounded-lg border border-red-500/20">{errorMsg}</div>}
+            <Nav onBack={back} onNext={handleNext1} canNext={true} />
           </div>
         )}
 
@@ -174,48 +194,7 @@ export const Onboarding = () => {
                 </button>
               ))}
             </div>
-            <Nav onBack={back} onNext={next} canNext={true} />
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="max-w-2xl mx-auto bg-card border border-border rounded-xl shadow-soft p-10 space-y-8">
-            <div className="flex items-center gap-3 text-base font-semibold text-primary">
-              <BarChart2 className="h-5 w-5" /> Step 4 — Market Optimization
-            </div>
-            
-            <div className="rounded-xl border border-border p-6 bg-secondary/30">
-              <label className="flex items-center justify-between cursor-pointer">
-                <div>
-                  <div className="font-sans text-lg font-semibold">AI Market Risk Optimization</div>
-                  <div className="text-sm text-muted-foreground mt-1">Let AI dynamically select the safest and best investment areas based on real-time market data (e.g. VIX).</div>
-                </div>
-                <div className={`relative w-14 h-8 rounded-full transition-colors ${aiOptimization ? 'bg-primary' : 'bg-muted'} flex items-center px-1`}>
-                  <input type="checkbox" className="hidden" checked={aiOptimization} onChange={(e) => setAiOptimization(e.target.checked)} />
-                  <div className={`w-6 h-6 rounded-full bg-background shadow-md transform transition-transform ${aiOptimization ? 'translate-x-6' : 'translate-x-0'}`} />
-                </div>
-              </label>
-            </div>
-
-            <div className={`transition-all duration-300 ${aiOptimization ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-              <div className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Or Manual Sector Selection</div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {sectorsList.map((sec) => (
-                  <button
-                    key={sec}
-                    onClick={() => setPreferredSectors(prev => prev.includes(sec) ? prev.filter(s => s !== sec) : [...prev, sec])}
-                    className={`rounded-lg border p-4 text-center transition-all ${preferredSectors.includes(sec) ? 'border-primary bg-primary/5 shadow-sm text-primary' : 'border-border bg-background text-foreground hover:border-primary/40'}`}
-                  >
-                    <div className="font-semibold text-sm flex items-center justify-center gap-2">
-                      {preferredSectors.includes(sec) && <Check className="w-4 h-4" />}
-                      {sec}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <Nav onBack={back} onNext={submit} canNext nextLabel="Generate My Plan" />
+            <Nav onBack={back} onNext={handleSubmit} canNext={true} nextLabel="Generate My Plan" />
           </div>
         )}
       </div>
@@ -228,7 +207,7 @@ const inputCls =
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <label className="block">
-    <div className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{label}</div>
+    <div className="mb-3 text-xs md:text-sm font-semibold uppercase tracking-wider text-muted-foreground whitespace-nowrap truncate">{label}</div>
     {children}
   </label>
 );

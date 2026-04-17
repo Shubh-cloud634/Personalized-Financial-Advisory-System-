@@ -19,7 +19,7 @@ const buildInsights = (profile: ReturnType<typeof useUserProfile>["profile"]) =>
     items.push({
       tone: "success",
       title: "Strong Savings Rate",
-      body: `You're saving ${(d.savingsRate * 100).toFixed(1)}% of your income — that's $${d.monthlySavings.toLocaleString()} every month toward "${profile.goal.name}".`,
+      body: `You're saving ${(d.savingsRate * 100).toFixed(1)}% of your income — that's ₹${d.monthlySavings.toLocaleString()} every month toward "${profile.goal.name}".`,
       cta: "Keep going",
     });
   } else if (d.savingsRate > 0) {
@@ -33,7 +33,7 @@ const buildInsights = (profile: ReturnType<typeof useUserProfile>["profile"]) =>
     items.push({
       tone: "warning",
       title: "Expenses Exceed Income",
-      body: `You're spending more than you earn. Cut expenses by $${(profile.expenses - profile.income).toLocaleString()} to start saving for "${profile.goal.name}".`,
+      body: `You're spending more than you earn. Cut expenses by ₹${(profile.expenses - profile.income).toLocaleString()} to start saving for "${profile.goal.name}".`,
       cta: "Fix budget",
     });
   }
@@ -52,7 +52,7 @@ const buildInsights = (profile: ReturnType<typeof useUserProfile>["profile"]) =>
     items.push({
       tone: "primary",
       title: "Adjust to Hit Your Goal",
-      body: `To hit "${profile.goal.name}" in ${profile.goal.targetMonths} months you need to save $${need.toLocaleString()}/month — currently saving $${d.monthlySavings.toLocaleString()}.`,
+      body: `To hit "${profile.goal.name}" in ${profile.goal.targetMonths} months you need to save ₹${need.toLocaleString()}/month — currently saving ₹${d.monthlySavings.toLocaleString()}.`,
       cta: "Run scenario",
     });
   }
@@ -182,11 +182,11 @@ export const Recommendations = () => {
       </div>
 
       <div className="mb-8 grid gap-6 md:gap-7 md:grid-cols-3">
-        <SummaryTile label="Target" value={`$${profile.goal.targetAmount.toLocaleString()}`} sub={`${profile.goal.targetMonths} months`} />
-        <SummaryTile label="Required / month" value={`$${required.toLocaleString()}`} sub={`Currently $${derived.monthlySavings.toLocaleString()}`} />
+        <SummaryTile label="Target" value={`₹${profile.goal.targetAmount.toLocaleString()}`} sub={`${profile.goal.targetMonths} months`} />
+        <SummaryTile label="Required / month" value={`₹${required.toLocaleString()}`} sub={`Currently ₹${derived.monthlySavings.toLocaleString()}`} />
         <SummaryTile
           label="Status"
-          value={onTrack ? "On Track" : `Gap $${gap.toLocaleString()}`}
+          value={onTrack ? "On Track" : `Gap ₹${gap.toLocaleString()}`}
           sub={onTrack ? "Maintain pace" : "Increase income or cut expenses"}
           tone={onTrack ? "success" : "warning"}
         />
@@ -221,7 +221,7 @@ export const Recommendations = () => {
               </div>
               <div>
                 <div className="body-text font-bold md:text-lg text-foreground">
-                  ${Math.round((derived.monthlySavings * r.alloc) / 100).toLocaleString()}/mo
+                  ₹{Math.round((derived.monthlySavings * r.alloc) / 100).toLocaleString()}/mo
                 </div>
                 <div className="metric-label mt-1">Per Month</div>
               </div>
@@ -277,7 +277,7 @@ export const GoalsCard = () => {
           <div>
             <div className="card-title">{profile.goal.name}</div>
             <div className="body-text font-semibold text-muted-foreground mt-3">
-              ${profile.savings.toLocaleString()} / ${profile.goal.targetAmount.toLocaleString()}
+              ₹{profile.savings.toLocaleString()} / ₹{profile.goal.targetAmount.toLocaleString()}
             </div>
           </div>
           <div className="metric-number text-primary text-[clamp(28px,_5vw,_36px)] flex-shrink-0">{pct.toFixed(1)}%</div>
@@ -291,7 +291,7 @@ export const GoalsCard = () => {
           />
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-3">
-          <Mini label="Saving" value={`$${d.monthlySavings.toLocaleString()}/mo`} />
+          <Mini label="Saving" value={`₹${d.monthlySavings.toLocaleString()}/mo`} />
           <Mini label="Time to Goal" value={isFinite(d.monthsToGoal) ? `${d.monthsToGoal} mo` : "—"} />
           <Mini label="Target Date" value={`${profile.goal.targetMonths} mo`} />
         </div>

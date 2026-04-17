@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, BarChart, Bar, CartesianGrid, XAxis, YAxis, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { TrendingUp, Shield, Activity, Loader } from "lucide-react";
 import { motion } from "framer-motion";
 import {
@@ -115,7 +115,7 @@ export const InvestmentAllocation = ({
         <div className="space-y-6">
           <div>
             <label className="block mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              Monthly Investment Amount ($)
+              Monthly Investment Amount (₹)
             </label>
             <input
               type="number"
@@ -199,10 +199,10 @@ export const InvestmentAllocation = ({
       </div>
 
       {/* Investment Summary Cards */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
         <motion.div className="glass-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
           <div className="text-xs text-muted-foreground mb-1">Monthly Investment</div>
-          <div className="metric-number text-green-500 text-2xl">${monthlyInvestAmount.toLocaleString()}</div>
+          <div className="metric-number text-green-500 text-2xl">₹{monthlyInvestAmount.toLocaleString()}</div>
         </motion.div>
 
         <motion.div className="glass-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.05 }}>
@@ -212,36 +212,40 @@ export const InvestmentAllocation = ({
 
         <motion.div className="glass-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.1 }}>
           <div className="text-xs text-muted-foreground mb-1">Total Invested</div>
-          <div className="metric-number text-orange-500 text-2xl">${totalInvestment.toLocaleString()}</div>
+          <div className="metric-number text-orange-500 text-2xl">₹{totalInvestment.toLocaleString()}</div>
         </motion.div>
 
         <motion.div className="glass-card bg-primary/5 border-primary/20" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.15 }}>
           <div className="text-xs text-muted-foreground mb-1">Projected Value*</div>
-          <div className="metric-number text-primary text-2xl">${Math.round(projectedValue).toLocaleString()}</div>
+          <div className="metric-number text-primary text-2xl">₹{Math.round(projectedValue).toLocaleString()}</div>
         </motion.div>
       </div>
 
-      {/* Pie Chart Card */}
+      {/* Bar Chart Card */}
       <motion.div className="glass-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
-        <div className="h-80">
+        <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie data={allocationData} cx="50%" cy="50%" innerRadius={60} outerRadius={120} paddingAngle={2} dataKey="value">
-                {allocationData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
+            <BarChart layout="vertical" data={allocationData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <XAxis type="number" hide />
+              <YAxis dataKey="name" type="category" width={110} tick={{fill: "hsl(var(--muted-foreground))", fontSize: 11}} axisLine={false} tickLine={false} />
+              <Tooltip 
+                cursor={{ fill: "rgba(255,255,255,0.05)" }}
                 contentStyle={{
                   backgroundColor: "#1a1a2e",
                   border: "1px solid #444",
                   borderRadius: "8px",
                   padding: "12px 16px",
+                  color: "#fff",
                 }}
-                formatter={(value) => `${value}%`}
+                itemStyle={{ color: "#ffffff" }}
+                formatter={(value: number) => `${value}%`}
               />
-              <Legend wrapperStyle={{ paddingTop: "20px" }} />
-            </PieChart>
+              <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                {allocationData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Bar>
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </motion.div>
@@ -268,7 +272,7 @@ export const InvestmentAllocation = ({
               </div>
               <div className="text-right">
                 <div className="font-bold" style={{ color: allocationData[idx]?.color }}>{item.allocation}%</div>
-                <div className="text-xs text-muted-foreground">${investAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}/mo</div>
+                <div className="text-xs text-muted-foreground">₹{investAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}/mo</div>
               </div>
             </motion.div>
           );

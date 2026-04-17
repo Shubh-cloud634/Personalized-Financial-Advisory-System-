@@ -7,17 +7,17 @@ export const LandingPage = ({ onStart }: { onStart: () => void }) => {
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 py-8 flex justify-center z-10">
         <h1 className="font-display font-medium text-2xl tracking-widest text-foreground">
-          VaultAI
+          SmartSave
         </h1>
       </header>
 
       {/* Main Hero & Split Layout */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-8 pt-32 pb-16 flex flex-col justify-center">
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-8 pt-20 pb-8 flex flex-col justify-center">
+        <div className="grid lg:grid-cols-2 gap-8 items-center mb-10">
           
           {/* Left: Copy & CTA */}
-          <div className="space-y-10">
-            <h2 className="font-display font-bold text-6xl tracking-tight text-foreground sm:text-7xl leading-[1.05]">
+          <div className="space-y-6">
+            <h2 className="font-display font-bold text-5xl tracking-tight text-foreground sm:text-6xl leading-[1.05]">
               MASTER YOUR<br />FINANCES. UNLOCK<br />YOUR FUTURE.
             </h2>
             <p className="text-muted-foreground text-xl max-w-xl leading-relaxed">
@@ -34,14 +34,14 @@ export const LandingPage = ({ onStart }: { onStart: () => void }) => {
           </div>
 
           {/* Right: Minimal Abstract Illustration */}
-          <div className="relative hidden lg:flex justify-end items-center aspect-square max-h-[500px]">
+          <div className="relative hidden lg:flex justify-end items-center aspect-square max-h-[400px]">
             {/* Abstract geometric composition evoking finance/tech in a human-crafted way */}
-            <div className="relative w-[400px] h-[400px]">
+            <div className="relative w-[320px] h-[320px]">
               {/* Soft background glow */}
               <div className="absolute inset-0 bg-orange-100/40 rounded-full blur-3xl opacity-60"></div>
               
               {/* Geometric elements */}
-              <div className="absolute top-8 right-8 w-48 h-64 bg-card border border-border rounded-2xl shadow-soft transform rotate-3"></div>
+              <div className="absolute top-4 right-4 w-40 h-56 bg-card border border-border rounded-2xl shadow-soft transform rotate-3"></div>
               <div className="absolute top-16 left-8 w-56 h-48 bg-background border border-border rounded-2xl shadow-soft transform -rotate-6 flex flex-col p-6 justify-between overflow-hidden">
                 <div className="w-12 h-2 bg-muted/60 rounded-full"></div>
                 <div className="space-y-3">
@@ -55,7 +55,7 @@ export const LandingPage = ({ onStart }: { onStart: () => void }) => {
               </div>
 
               {/* Foreground overlapping element */}
-              <div className="absolute bottom-12 right-20 w-40 h-40 bg-orange-50 border border-border rounded-full shadow-md flex items-center justify-center">
+              <div className="absolute bottom-8 right-12 w-32 h-32 bg-orange-50 border border-border rounded-full shadow-md flex items-center justify-center">
                  <Sparkles className="w-8 h-8 text-orange-600" />
               </div>
             </div>

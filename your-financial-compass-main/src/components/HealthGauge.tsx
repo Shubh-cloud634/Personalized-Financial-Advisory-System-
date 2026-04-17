@@ -8,7 +8,7 @@ export const HealthGauge = ({ score = 82 }: { score?: number }) => {
   const label = score >= 80 ? "Excellent" : score >= 60 ? "Good" : score >= 40 ? "Fair" : "Needs Work";
 
   return (
-    <div className="glass-card flex flex-col items-center justify-center gap-4 p-8 md:p-8 sm:p-6 min-h-[160px]">
+    <div className="glass-card flex flex-col items-center justify-center gap-4 p-8 md:p-8 sm:p-6 h-full min-h-[160px]">
       <div className="metric-label">Financial Health Score</div>
       <div className="relative mx-auto h-[160px] md:h-[180px] w-[240px] md:w-[280px]">
         <svg viewBox="0 0 240 140" className="h-full w-full">

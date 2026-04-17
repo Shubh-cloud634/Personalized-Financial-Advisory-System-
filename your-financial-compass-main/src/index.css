@@ -218,4 +218,25 @@
   .scrollbar-thin::-webkit-scrollbar-thumb:hover { 
     background: hsl(var(--muted-foreground)); 
   }
+
+  /* Chatbot styles */
+  .res-card { @apply bg-secondary/40 border border-border rounded-xl p-4 mt-3 font-mono text-sm; }
+  .res-card-title { @apply text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 border-b border-border/50 pb-2 font-sans; }
+  .res-row { @apply flex justify-between items-center py-1.5 text-sm; border-bottom: 1px solid hsl(var(--border) / 0.5); }
+  .res-row:last-child { border-bottom: none; }
+  .res-key { @apply text-muted-foreground; }
+  .res-val { @apply font-semibold; }
+  .res-val.good { @apply text-green-600 dark:text-green-500; }
+  .res-val.bad { @apply text-red-600 dark:text-red-500; }
+  .res-val.neutral { @apply text-orange-600 dark:text-orange-500; }
+  
+  .prog-wrap { @apply mt-4 mb-2; }
+  .prog-label { @apply flex justify-between text-xs text-muted-foreground font-mono mb-1.5; }
+  .prog-track { @apply h-1.5 bg-secondary rounded-full overflow-hidden shadow-inner; }
+  .prog-fill { @apply h-full rounded-full transition-all duration-700 ease-out; }
+  
+  .val { @apply font-bold text-primary; }
+  .warn { @apply text-red-600 text-sm font-medium; }
+  .ok { @apply text-green-600 text-sm font-medium; }
+  .note { @apply text-orange-600 text-sm font-medium; }
 }
