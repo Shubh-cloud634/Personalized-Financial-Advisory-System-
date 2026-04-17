@@ -19,6 +19,8 @@ export interface UserProfile {
   essential_spending: number;
   emergency_fund: number;
   financial_scenario: string;
+  ai_optimization: boolean;
+  preferred_sectors: string[];
 }
 
 export interface AIPredictions {
