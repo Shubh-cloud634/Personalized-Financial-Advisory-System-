@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Target, Wallet, ArrowRight, Activity } from "lucide-react";
+import { Target, Wallet, ArrowRight, Activity, BarChart2, Check } from "lucide-react";
 import { useUserProfile, type RiskAppetite } from "@/context/UserProfile";
+import { InvestmentAllocation } from "./InvestmentAllocation";
 
 export const Onboarding = () => {
   const { setProfile } = useUserProfile();
@@ -17,6 +18,10 @@ export const Onboarding = () => {
 
   const [creditScore, setCreditScore] = useState<number>(720);
   const [financialScenario, setFinancialScenario] = useState<string>("normal");
+  const [aiOptimization, setAiOptimization] = useState<boolean>(true);
+  const [preferredSectors, setPreferredSectors] = useState<string[]>([]);
+
+  const sectorsList = ["Technology", "Healthcare", "Real Estate", "Crypto", "Bonds", "ESG/Green"];
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
@@ -33,6 +38,8 @@ export const Onboarding = () => {
       essential_spending: 0, // removed field
       emergency_fund: 0,     // removed field
       financial_scenario: financialScenario,
+      ai_optimization: aiOptimization,
+      preferred_sectors: preferredSectors,
     });
 
   const canNext0 = goalName.trim().length > 0 && targetAmount > 0 && targetMonths > 0;
@@ -40,8 +47,8 @@ export const Onboarding = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-10 bg-background text-foreground">
-      <div className="w-full max-w-2xl bg-card border border-border rounded-xl shadow-soft p-10">
-        
+      <div className="w-full max-w-7xl">
+        {/* Header */}
         <div className="mb-10 flex items-center gap-5">
           <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
             <Activity className="h-8 w-8" />
@@ -53,7 +60,7 @@ export const Onboarding = () => {
         </div>
 
         <div className="mb-8 flex gap-2">
-          {[0, 1, 2].map((i) => (
+          {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
               className={`h-1 flex-1 rounded-full transition-all ${i <= step ? "bg-primary" : "bg-secondary"}`}
@@ -61,50 +68,60 @@ export const Onboarding = () => {
           ))}
         </div>
 
+        {/* Step 0: Two Column Layout */}
         {step === 0 && (
-          <div className="space-y-8">
-            <div className="flex items-center gap-3 text-base font-semibold text-primary">
-              <Target className="h-5 w-5" /> Step 1 — Your Goal
-            </div>
-            <Field label="Your Name (optional)">
-              <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Elena" className={inputCls} />
-            </Field>
-            <Field label="What do you want to buy / achieve?">
-              <input
-                value={goalName}
-                onChange={(e) => setGoalName(e.target.value)}
-                placeholder="e.g. Buy a car, House down payment, Trip to Japan"
-                className={inputCls}
-              />
-            </Field>
-            <div className="grid gap-5 md:grid-cols-2">
-              <Field label="Target Amount ($)">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column: Goal Setup Form */}
+            <div className="bg-card border border-border rounded-xl shadow-soft p-8 md:p-10 space-y-8">
+              <div className="flex items-center gap-3 text-base font-semibold text-primary">
+                <Target className="h-5 w-5" /> Step 1 — Your Goal
+              </div>
+              <Field label="Your Name (optional)">
+                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Elena" className={inputCls} />
+              </Field>
+              <Field label="What do you want to buy / achieve?">
                 <input
-                  type="number"
-                  min={0}
-                  value={targetAmount || ""}
-                  onChange={(e) => setTargetAmount(+e.target.value)}
-                  placeholder="25000"
+                  value={goalName}
+                  onChange={(e) => setGoalName(e.target.value)}
+                  placeholder="e.g. Buy a car, House down payment, Trip to Japan"
                   className={inputCls}
                 />
               </Field>
-              <Field label="Target Timeframe (months)">
-                <input
-                  type="number"
-                  min={1}
-                  value={targetMonths || ""}
-                  onChange={(e) => setTargetMonths(+e.target.value)}
-                  placeholder="18"
-                  className={inputCls}
-                />
-              </Field>
+              <div className="grid gap-5 md:grid-cols-2">
+                <Field label="Target Amount ($)">
+                  <input
+                    type="number"
+                    min={0}
+                    value={targetAmount || ""}
+                    onChange={(e) => setTargetAmount(+e.target.value)}
+                    placeholder="25000"
+                    className={inputCls}
+                  />
+                </Field>
+                <Field label="Target Timeframe (months)">
+                  <input
+                    type="number"
+                    min={1}
+                    value={targetMonths || ""}
+                    onChange={(e) => setTargetMonths(+e.target.value)}
+                    placeholder="18"
+                    className={inputCls}
+                  />
+                </Field>
+              </div>
+              <Nav onNext={next} canNext={canNext0} />
             </div>
-            <Nav onNext={next} canNext={canNext0} />
+
+            {/* Right Column: Investment Allocation */}
+            <div className="overflow-y-auto max-h-[600px] pr-4">
+              <InvestmentAllocation risk={risk} goalAmount={targetAmount} timeframe={targetMonths} />
+            </div>
           </div>
         )}
 
+
         {step === 1 && (
-          <div className="space-y-8">
+          <div className="max-w-2xl mx-auto bg-card border border-border rounded-xl shadow-soft p-10 space-y-8">
             <div className="flex items-center gap-3 text-base font-semibold text-primary">
               <Wallet className="h-5 w-5" /> Step 2 — Your Finances
             </div>
@@ -137,7 +154,7 @@ export const Onboarding = () => {
         )}
 
         {step === 2 && (
-          <div className="space-y-8">
+          <div className="max-w-2xl mx-auto bg-card border border-border rounded-xl shadow-soft p-10 space-y-8">
             <div className="flex items-center gap-3 text-base font-semibold text-primary">
               <Activity className="h-5 w-5" /> Step 3 — Risk Appetite
             </div>
@@ -157,6 +174,47 @@ export const Onboarding = () => {
                 </button>
               ))}
             </div>
+            <Nav onBack={back} onNext={next} canNext={true} />
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="max-w-2xl mx-auto bg-card border border-border rounded-xl shadow-soft p-10 space-y-8">
+            <div className="flex items-center gap-3 text-base font-semibold text-primary">
+              <BarChart2 className="h-5 w-5" /> Step 4 — Market Optimization
+            </div>
+            
+            <div className="rounded-xl border border-border p-6 bg-secondary/30">
+              <label className="flex items-center justify-between cursor-pointer">
+                <div>
+                  <div className="font-sans text-lg font-semibold">AI Market Risk Optimization</div>
+                  <div className="text-sm text-muted-foreground mt-1">Let AI dynamically select the safest and best investment areas based on real-time market data (e.g. VIX).</div>
+                </div>
+                <div className={`relative w-14 h-8 rounded-full transition-colors ${aiOptimization ? 'bg-primary' : 'bg-muted'} flex items-center px-1`}>
+                  <input type="checkbox" className="hidden" checked={aiOptimization} onChange={(e) => setAiOptimization(e.target.checked)} />
+                  <div className={`w-6 h-6 rounded-full bg-background shadow-md transform transition-transform ${aiOptimization ? 'translate-x-6' : 'translate-x-0'}`} />
+                </div>
+              </label>
+            </div>
+
+            <div className={`transition-all duration-300 ${aiOptimization ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+              <div className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Or Manual Sector Selection</div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {sectorsList.map((sec) => (
+                  <button
+                    key={sec}
+                    onClick={() => setPreferredSectors(prev => prev.includes(sec) ? prev.filter(s => s !== sec) : [...prev, sec])}
+                    className={`rounded-lg border p-4 text-center transition-all ${preferredSectors.includes(sec) ? 'border-primary bg-primary/5 shadow-sm text-primary' : 'border-border bg-background text-foreground hover:border-primary/40'}`}
+                  >
+                    <div className="font-semibold text-sm flex items-center justify-center gap-2">
+                      {preferredSectors.includes(sec) && <Check className="w-4 h-4" />}
+                      {sec}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <Nav onBack={back} onNext={submit} canNext nextLabel="Generate My Plan" />
           </div>
         )}
