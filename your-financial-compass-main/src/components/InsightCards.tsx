@@ -301,8 +301,8 @@ export const GoalsCard = () => {
 };
 
 const Mini = ({ label, value }: { label: string; value: string }) => (
-  <div className="rounded-card border border-border bg-background p-5 md:p-6">
-    <div className="metric-label mb-3">{label}</div>
-    <div className="text-xl md:text-2xl font-bold text-foreground">{value}</div>
+  <div className="rounded-card border border-border bg-background p-4 md:p-5 overflow-hidden min-w-0">
+    <div className="metric-label mb-2 md:mb-3 truncate" title={label}>{label}</div>
+    <div className="text-lg md:text-xl font-bold text-foreground truncate" title={value}>{value}</div>
   </div>
 );
