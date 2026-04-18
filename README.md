@@ -22,9 +22,8 @@ This system aims to make financial planning simple, accessible, and data-driven.
 ## 🛠️ Tech Stack
 
 * **Programming Language:** Python
-* **Libraries:** Pandas, NumPy, Scikit-learn, Matplotlib
+* **Libraries:** Pandas, NumPy, Scikit-learn
 * **Frontend (Optional):**  React
-* **Database (Optional):** MySQL / MongoDB
 
 ---
 
