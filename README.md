@@ -33,7 +33,7 @@ This system aims to make financial planning simple, accessible, and data-driven.
 You can use publicly available datasets from:
 
 * Kaggle (credit card transactions, loan prediction, etc.)
-* Financial APIs like Yahoo Finance
+* Financial APIs used Alpha Vantage
 
 ---
 
@@ -110,10 +110,9 @@ Risk Level: Medium
 
 ## 🔮 Future Enhancements
 
-* Integration with real-time financial APIs
+* Integration with real-time financial API
 * Mobile application version
-* Advanced AI models (Deep Learning)
-* Secure user authentication system
+* Advanced AI models
 
 ---
 
